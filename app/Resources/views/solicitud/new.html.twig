@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block page_content %}
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+    <div class="x_title">
+      <h2><b>Solicitud de laboratorio </b><small>Formulario</small></h2>
+      <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+
+    {{ form_start(form) }}
+        {{ form_row(form.nombrePaciente) }}
+        {% for name, choices in form.laboratorio.vars.choices %}
+        <div class="col-lg-3">
+        <h4><b>{{name}}</b></h4>
+            <ul class="to_do">
+                {% for key,choice in choices %}
+                  <li>
+                    <p>
+                        {{ form_widget(form.laboratorio[key],{'attr':{'class':'flat'}}) }}
+                        {{ form_label(form.laboratorio[key]) }}
+                    </p>
+                  </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+        {{ form_row(form.observacion) }}
+        <input type="submit" value="Create" />
+    {{ form_end(form) }}
+
+    <ul>
+        <li>
+            <a href="{{ path('solicitud_index') }}">Back to the list</a>
+        </li>
+    </ul>
+     </div>
+    </div>
+</div>
+{% endblock %}

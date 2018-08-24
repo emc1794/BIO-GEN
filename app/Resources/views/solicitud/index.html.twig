@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block page_content %}
+    <h1>Solicituds list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombrepaciente</th>
+                <th>Fecharegistro</th>
+                <th>Fechaenvio</th>
+                <th>Estado</th>
+                <th>Observacion</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for solicitud in solicituds %}
+            <tr>
+                <td><a href="{{ path('solicitud_show', { 'id': solicitud.id }) }}">{{ solicitud.id }}</a></td>
+                <td>{{ solicitud.nombrePaciente }}</td>
+                <td>{% if solicitud.fechaRegistro %}{{ solicitud.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if solicitud.fechaEnvio %}{{ solicitud.fechaEnvio|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ solicitud.estado }}</td>
+                <td>{{ solicitud.observacion }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('solicitud_show', { 'id': solicitud.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('solicitud_edit', { 'id': solicitud.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('solicitud_new') }}">Create a new solicitud</a>
+        </li>
+    </ul>
+{% endblock %}

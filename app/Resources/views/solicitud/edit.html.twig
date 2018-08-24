@@ -1,21 +1,49 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+    EDITAR
+{% endblock %}
+
 {% block page_content %}
-    <h1>Solicitud edit</h1>
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+    <div class="x_title">
+      <h2><b>Edicion de solicitud de laboratorio </b><small>Formulario</small></h2>
+      <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
 
     {{ form_start(edit_form) }}
-        {{ form_widget(edit_form) }}
-        <input type="submit" value="Edit" />
+        {{ form_row(edit_form.nombrePaciente) }}
+        <div class="row">
+        {% for name, choices in edit_form.laboratorio.vars.choices %}
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+            <h4><b>{{name}}</b></h4>
+                <ul class="to_do">
+                    {% for key,choice in choices %}
+                      <li>
+                        <p>
+                            {{ form_widget(edit_form.laboratorio[key],{'attr':{'class':'flat'}}) }}
+                            {{ form_label(edit_form.laboratorio[key]) }}
+                        </p>
+                      </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+        </div>
+        {{ form_row(edit_form.observacion) }}
+        <div class="ln_solid"></div>
+          <div class="form-group">
+            <div class="col-md-12 col-sm-12 col-xs-12 col-md-offset-4">
+                <input type="submit" class="btn btn-primary" value="Guardar Solicitud" />
+                <a href="{{path('solicitud_delete',{id:solicitud.id})}}" class="btn btn-danger"> Eliminar</a>
+            </div>
+          </div>
     {{ form_end(edit_form) }}
-
-    <ul>
-        <li>
-            <a href="{{ path('solicitud_index') }}">Back to the list</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+     </div>
+    </div>
+</div>
 {% endblock %}
+
+

@@ -2,7 +2,7 @@
     <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
               <a href="#" class="site_title">
-                <img src="{{ asset('logo.png') }}" alt="..." class="logo">
+                <img src="{{ asset('lab-1.jpg') }}" alt="..." class="logo">
                  <span class="titlepage">BIO-GEN</span></a>
         </div>
 
@@ -15,8 +15,11 @@
             </div>
             <div class="profile_info">
 
-                <span>Bienvenido</span> <br>
-                <span>username</span> <br>
+                <span><b>Bienvenido</b></span> <br>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <span>{{app.user.persona.nombreCompleto}}</span>
+                {% endif %}
+                 <br>
                 <b style="color:white"></b>
 
             </div>
@@ -31,10 +34,10 @@
                 <h3>Menu</h3>
                 <ul class="nav side-menu">
                     <li><a><i class="fa fa-file-text" aria-hidden="true"></i>
-                                    Solicitudes <span class="fa fa-chevron-down"></span></a>
+                                    Solicitud <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="{{path('solicitud_index')}}">Solicitudes Realizadas</a></li>
-                                    <li><a  href="">Reportes</a></li>
+                                    <li><a href="{{path('solicitud_index')}}">Mis solicitudes</a></li>
+                                    <li><a  href="{{path('solicitud_reporte')}}">Reportes</a></li>
                             </ul>
                         </li>
                 </ul>
@@ -42,20 +45,5 @@
 
         </div>
         <!-- /sidebar menu -->
-
-        <!-- /menu footer buttons -->
-        <div class="sidebar-footer hidden-small">
-            <a href="#" data-toggle="tooltip" data-placement="top" title="Settings">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-            </a>
-            <a data-toggle="tooltip" data-placement="top" title="Lock">
-                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-            </a>
-
-        </div>
-        <!-- /menu footer buttons -->
     </div>
 </div>

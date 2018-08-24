@@ -2,6 +2,8 @@
 
 namespace SolicitudBundle\Repository;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 /**
  * SolicitudRepository
  *
@@ -10,4 +12,32 @@ namespace SolicitudBundle\Repository;
  */
 class SolicitudRepository extends \Doctrine\ORM\EntityRepository
 {
+	public function listadoAjax($cantidad,$comienza,$campo,$dir,$buscar)
+    {
+        $em = $this->getEntityManager();
+        $consul = $em->createQuery('SELECT s FROM SolicitudBundle:Solicitud s
+        WHERE s.nombrePaciente LIKE :value
+        ORDER BY '.$campo.' '.$dir)
+            ->setParameter('value',$buscar.'%')
+            ->setFirstResult($comienza)
+            ->setMaxResults($cantidad);
+
+        $paginator = new Paginator($consul, $fetchJoinCollection = true);
+        $c = count($paginator);
+        $resp = $consul->getResult();
+        return array('result'=>$resp,'cant'=>$c);
+    }
+
+    public function findReportePorFechas($inicio,$fin){
+        $em = $this->getEntityManager();
+
+        $resultado=$em->createQuery('SELECT s FROM SolicitudBundle:Solicitud s
+                                    where s.fechaEnvio>=:inicio and s.fechaEnvio<=:fin
+                                    ORDER BY s.fechaEnvio ASC')
+                                    ->setParameter('inicio',$inicio)
+                                    ->setParameter('fin',$fin)
+                                    ->getResult();
+
+        return $resultado;
+    }
 }

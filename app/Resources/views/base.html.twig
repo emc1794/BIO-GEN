@@ -8,7 +8,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 
 
-		    <title>CPS - Sistema de Vacacion</title>
+		    <title>BIO-GEN|{% block title %}
+			{% endblock title %}
+			</title>
 
 		{% block stylesheets %}
 		{% endblock stylesheets %}
@@ -18,6 +20,10 @@
 	   		 width: 40px;
 			}
 		</style>
+
+			<!-- Datatable -->
+		    <link href="{{ asset('gentelella/vendors/DataTables/datatables.min.css') }}" rel="stylesheet">
+		    
 		    <!-- Bootstrap -->
 		    <link href="{{ asset('gentelella/vendors/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
 		    <!-- Font Awesome -->
@@ -34,7 +40,7 @@
 
 
 		    <!-- Custom Theme Style -->
-		    <link href="{{ asset('gentelella/build/css/custom.min.css') }}" rel="stylesheet">
+		    <link href="{{ asset('gentelella/build/css/custom.css') }}" rel="stylesheet">
 		    <link href="{{ asset('gentelella/build/css/base.css') }}" rel="stylesheet">
 
 </head>
@@ -51,12 +57,22 @@
 			        <!-- page content -->
 			        <div class="right_col" role="main">
 			            <div class="">
-											<div class="row">
-														<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-							                		{% block page_content %}{% endblock %}
-							              </div>
+							<div class="row">
+									<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+									{% for flashMessage in app.session.flashbag.get('success') %}
+										<div class="alert alert-success" role="alert"> <i class="fa fa-check-square" aria-hidden="true"></i> {{ flashMessage}}</div>
+                                    {% endfor %}
+                                    {% for flashMessage in app.session.flashbag.get('error') %}
+										<div class="alert alert-danger" role="alert"> <i class="fa fa-exclamation-circle" aria-hidden="true"></i> {{ flashMessage}}</div>
+                                    {% endfor %}
+                                    {% for flashMessage in app.session.flashbag.get('warning') %}
+										<div class="alert alert-warning" role="alert"> <i class="fa fa-exclamation-triangle" aria-hidden="true"></i> {{ flashMessage}}</div>
+                                    {% endfor %}
+                                    <br>
+			                		{% block page_content %}{% endblock %}
+			              			</div>
 
-												</div>
+							</div>
 			            </div>
 			        </div>
 			        <!-- /page content -->
@@ -85,9 +101,15 @@
 			    <script src="{{ asset('gentelella/vendors/pnotify/dist/pnotify.js') }}"></script>
 			    <script src="{{ asset('gentelella/vendors/pnotify/dist/pnotify.buttons.js') }}"></script>
 			    <script src="{{ asset('gentelella/vendors/pnotify/dist/pnotify.nonblock.js') }}"></script>
+			    <!-- Datatables -->
+				<script src="{{ asset('gentelella/vendors/DataTables/datatables.min.js') }}"></script>
 
 			    <!-- iCheck -->
     			<script src="{{ asset('gentelella/vendors/iCheck/icheck.min.js') }}"></script>
+
+    			<!-- script de route bundle -->
+				<script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+				<script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
 			{% block javascripts %}
 
 			{% endblock javascripts %}

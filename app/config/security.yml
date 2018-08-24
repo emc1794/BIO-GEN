@@ -1,24 +1,44 @@
 # To get started with security, check out the documentation:
 # https://symfony.com/doc/current/security.html
 security:
+    encoders:
+        SolicitudBundle\Entity\Usuario:
+            algorithm:           md5
+            encode_as_base64:    false
+            iterations:          1
 
-    # https://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory:
-            memory: ~
+        usuEmpAdm:
+            entity: { class: SolicitudBundle\Entity\Usuario, property: login }
 
     firewalls:
-        # disables authentication for assets and the profiler, adapt it according to your needs
+          # disables authentication for assets and the profiler, adapt it according to your needs
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        main:
-            anonymous: ~
+        EmpAdm:
+             pattern: ^/
+             anonymous: ~
+             provider: usuEmpAdm
+             form_login:
+                 login_path: /login
+                 check_path: /login_check
+                 default_target_path: /
+                 always_use_default_target_path: true
+             access_denied_url: /login
+             logout:
+                 path: /logout
+                 target: /login
             # activate different ways to authenticate
+            # http_basic: ~
+            # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
 
-            # https://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
-            #http_basic: ~
+            # form_login: ~
+            # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
 
-            # https://symfony.com/doc/current/security/form_login_setup.html
-            #form_login: ~
+    access_control:
+          - { path: ^/login,       roles: IS_AUTHENTICATED_ANONYMOUSLY }
+          - { path: ^/,       roles: IS_AUTHENTICATED_FULLY }
+          - { path: ^/*,      roles: IS_AUTHENTICATED_FULLY }

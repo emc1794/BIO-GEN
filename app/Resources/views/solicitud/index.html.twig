@@ -1,47 +1,140 @@
 {% extends 'base.html.twig' %}
 
-{% block page_content %}
-    <h1>Solicituds list</h1>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nombrepaciente</th>
-                <th>Fecharegistro</th>
-                <th>Fechaenvio</th>
-                <th>Estado</th>
-                <th>Observacion</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for solicitud in solicituds %}
-            <tr>
-                <td><a href="{{ path('solicitud_show', { 'id': solicitud.id }) }}">{{ solicitud.id }}</a></td>
-                <td>{{ solicitud.nombrePaciente }}</td>
-                <td>{% if solicitud.fechaRegistro %}{{ solicitud.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if solicitud.fechaEnvio %}{{ solicitud.fechaEnvio|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ solicitud.estado }}</td>
-                <td>{{ solicitud.observacion }}</td>
-                <td>
-                    <ul>
-                        <li>
-                            <a href="{{ path('solicitud_show', { 'id': solicitud.id }) }}">show</a>
-                        </li>
-                        <li>
-                            <a href="{{ path('solicitud_edit', { 'id': solicitud.id }) }}">edit</a>
-                        </li>
-                    </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('solicitud_new') }}">Create a new solicitud</a>
-        </li>
-    </ul>
+{% block title %}
+    LISTAR
 {% endblock %}
+
+{% block page_content %}
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+          <h2><b>Solicitudes de laboratorio </b><small>Listado</small></h2>
+          <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-xs-12">
+                    <table id="table-reponsive" class="table table-striped table-bordered dataTable" style="width:100%">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Nº</th>
+                            <th>Paciente</th>
+                            <th>Fecha de envio</th>
+                            <th>Observacion</th>
+                            <th>Estado</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+<script>
+        $(document).ready(function () {
+            var path=Routing.generate('solicitud_listado');
+            var table = $('#table-reponsive').DataTable({
+                dom: 'Bfrtip',
+                select: true,
+                "processing": true,
+                "serverSide": true,
+                "paging": true,
+                "ajax": {
+                    "url": path,
+                    "type": "POST",
+                },
+                "columns": [
+                    {"data": "opcion"},
+                    {"data": "id"},
+                    {"data": "paciente"},
+                    {"data": "fechaRegistro"},
+                    {"data": "observacion"},
+                    {"data": "estadoString"}
+                ],
+                "columnDefs": [
+                    {
+                        orderable: false,
+                        className: 'select-checkbox',
+                        targets: 0
+                    }
+                ],
+                select: {
+                    style: 'os',
+                    selector: 'td:first-child'
+                },
+                order: [[1, 'asc']],
+                buttons: {
+                    buttons: [
+                        'pageLength',
+                        {
+                            text: '<i class="fa fa-refresh"> Actualizar</i>',
+                            action: function ( e, dt, node, config ) {
+                                dt.ajax.reload();
+                            }
+                        },
+                        {
+                            text: '<i class="fa fa-plus-circle"> Registrar</i>',
+                            action: function ( dt ) {
+                                var url=Routing.generate('solicitud_new');
+                                location.href=url;
+                            }
+                        },
+                        {
+                            extend: 'selectedSingle',
+                            text: '<i class="fa fa-eye"> Ver</i>',
+                            action: function ( e, dt) {
+                                var fila= dt.row( { selected: true } ).data();
+                                var url=Routing.generate('solicitud_show', { id: fila.id });
+                                location.href=url;
+                            }
+                        },{
+                            extend: 'selectedSingle',
+                            text: '<i class="fa fa-share-square-o"> Enviar</i>',
+                            action: function ( e, dt ) {
+                                var fila= dt.row( { selected: true } ).data();
+                                if(fila.estado=='B'){
+                                    var url=Routing.generate('solicitud_enviar', { id: fila.id });
+                                    location.href=url;
+                                }else{
+                                    alert("La solicitud ya fue enviada");
+                                }
+                            }
+                        }
+                    ]
+                },
+                language: {
+                    decimal: "",
+                    emptyTable: "No hay información",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Registros",
+                    infoEmpty: "Mostrando 0 to 0 of 0 Entradas",
+                    infoFiltered: "(Filtrado de _MAX_ total entradas)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Registros",
+                    loadingRecords: "Cargando...",
+                    processing: "<p class='text-center'>Procesando...</p>",
+                    search: "Buscar:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    },
+                    select: {
+                        "rows": "%d fila seleccionada"
+                    },
+                    buttons: {
+                        pageLength: {
+                            _: "Mostrar %d registros"
+                        }
+                    }
+                },
+            });
+        })
+    </script>
+{% endblock javascripts %}

@@ -15,7 +15,7 @@ class SolicitudType extends AbstractType
     {
         $builder
         ->add('nombrePaciente')
-        ->add('observacion','textarea')
+        ->add('observacion','textarea',array('required'=>false))
         ->add('laboratorio', 'entity', array(
                 'class' => 'SolicitudBundle:Laboratorio',
                 'expanded'=>true,

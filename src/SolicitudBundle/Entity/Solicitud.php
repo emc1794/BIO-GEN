@@ -58,7 +58,7 @@ class Solicitud
     /**
      * @var string
      *
-     * @ORM\Column(name="observacion", type="string", length=255, nullable=true)
+     * @ORM\Column(name="observacion", type="string", length=255)
      */
     private $observacion;
 
@@ -138,6 +138,11 @@ class Solicitud
         return $this->fechaRegistro;
     }
 
+    public function getFechaRegistroString()
+    {
+        return (is_null($this->fechaRegistro))?'':$this->fechaRegistro->format('d-m-Y h:m');
+    }
+
     /**
      * Set fechaEnvio
      *
@@ -162,6 +167,11 @@ class Solicitud
         return $this->fechaEnvio;
     }
 
+    public function getFechaEnvioString()
+    {
+        return (is_null($this->fechaEnvio))?'':$this->fechaEnvio->format('d-m-Y h:m');
+    }
+
     /**
      * Set estado
      *
@@ -184,6 +194,21 @@ class Solicitud
     public function getEstado()
     {
         return $this->estado;
+    }
+
+    public function getEstadoString()
+    {
+        $nuevoEstado='';
+        switch ($this->estado)
+        {
+            case 'B':
+                $nuevoEstado='Borrador|B|';
+                break;
+            case 'E':
+                $nuevoEstado='Enviado|E|';
+                break;
+        }
+        return $nuevoEstado;
     }
 
     /**

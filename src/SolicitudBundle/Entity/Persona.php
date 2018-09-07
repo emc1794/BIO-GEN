@@ -3,12 +3,19 @@
 namespace SolicitudBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Persona
  *
  * @ORM\Table(name="persona")
+ * @ORM\InheritanceType("JOINED")
  * @ORM\Entity(repositoryClass="SolicitudBundle\Repository\PersonaRepository")
+ * @UniqueEntity(
+ *     fields={"ci"},
+ *     errorPath="ci",
+ *     message="Este Carnet de identidad ya existe"
+ * )
  */
 class Persona
 {
@@ -100,7 +107,7 @@ class Persona
      *
      * @return int
      */
-    public function getId()
+    protected function getId()
     {
         return $this->id;
     }
@@ -225,6 +232,11 @@ class Persona
         return $this->fechaNacimiento;
     }
 
+    public function getFechaNacimientoString()
+    {
+        return (is_null($this->fechaNacimiento))?'':$this->fechaNacimiento->format('d-m-Y h:m');
+    }
+
     /**
      * Set sexo
      *
@@ -247,6 +259,15 @@ class Persona
     public function getSexo()
     {
         return $this->sexo;
+    }
+
+     public function getSexoString()
+    {
+        if ($this->sexo) {
+            return 'Masculino';
+        }else{
+            return 'Femenino';
+        }
     }
 
     /**

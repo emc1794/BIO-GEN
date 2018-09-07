@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block page_content %}
+	{% if is_granted('IS_AUTHENTICATED_FULLY') %}
 	<h1 align="center">Bienvenido {{app.user.persona.nombreCompleto}}</h1>
+	{% endif %}
 {% endblock %}

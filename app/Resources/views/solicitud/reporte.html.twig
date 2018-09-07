@@ -92,7 +92,7 @@
                         {% for item in resultado %}
                         <tr>
                             <td>{{item.id}}</td>
-                            <td>{{item.nombrePaciente}}</td>
+                            <td>{{item.paciente.nombreCompleto}}</td>
                             <td>{{item.fechaRegistroString}}</td>
                             <td>{{item.fechaEnvioString}}</td>
                             <td>{{item.solicitudDetalles|length}}</td>

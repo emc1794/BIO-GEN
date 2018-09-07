@@ -19,6 +19,7 @@ class AppKernel extends Kernel
             new Genemu\Bundle\FormBundle\GenemuFormBundle(),
             new SolicitudBundle\SolicitudBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new ReparacionBundle\ReparacionBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {

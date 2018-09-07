@@ -1,0 +1,18 @@
+{#{% extends 'base.html.twig' %}#}
+    {{ form_start(formPaciente,{'attr':{'id':'form-paciente'}}) }}
+        {{form_row(formPaciente.nombre)}}
+        {{form_row(formPaciente.paterno)}}
+        {{form_row(formPaciente.materno)}}
+        {{form_row(formPaciente.ci)}}
+        {{form_row(formPaciente.fechaNacimiento)}}
+        {% for child  in formPaciente.sexo %}
+        <p>
+            {{form_row(child,{'attr':{'class':'flat'}})}}
+        </p>
+        {% endfor %}
+        {{form_row(formPaciente.telefono)}}
+        {{form_row(formPaciente.email)}}
+        {{form_row(formPaciente.direccion)}}
+        <input id="form_submit" type="submit" value="Registrar"  class="btn btn-primary" />
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+    {{ form_end(formPaciente) }}

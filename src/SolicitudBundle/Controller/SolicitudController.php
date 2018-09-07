@@ -3,6 +3,7 @@
 namespace SolicitudBundle\Controller;
 
 use SolicitudBundle\Entity\Solicitud;
+use SolicitudBundle\Entity\Paciente;
 use SolicitudBundle\Form\ReporteSolicitudType;
 use SolicitudBundle\Entity\DetalleSolicitud;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -55,7 +56,7 @@ class SolicitudController extends Controller
                 $campo='s.id';
                 break;
             case 2:
-                $campo='s.nombrePaciente';
+                $campo='p.paciente';
                 break;
             case 3:
                 $campo='s.fechaRegistro';
@@ -76,7 +77,7 @@ class SolicitudController extends Controller
             $json[] = array(
                 'opcion'=>'',
                 'id'=>(string)$solicitud->getId(),
-                'paciente'=>$solicitud->getNombrePaciente(),
+                'paciente'=>$solicitud->getPaciente()->getNombreCompleto(),
                 'fechaRegistro'=>$solicitud->getFechaRegistroString(),
                 'observacion'=>$solicitud->getObservacion(),
                 'estadoString'=>$solicitud->getEstadoString(),
@@ -101,13 +102,29 @@ class SolicitudController extends Controller
      */
     public function newAction(Request $request)
     {
+        //dump($this->getUser()->getPersona()->getMedicoCentro());die();
         $solicitud = new Solicitud();
+        $paciente = new Paciente();
         $form = $this->createForm('SolicitudBundle\Form\SolicitudType', $solicitud);
+        $formPaciente= $this->createPacienteForm($paciente);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            //dump($form->getData());die();
             $em = $this->getDoctrine()->getManager();
+            $paciente=$em->getRepository('SolicitudBundle:Paciente')->findOneById($solicitud->getPacienteString());
+            if (is_null($paciente)) {
+                $this->get('session')->getFlashBag()->add('error', 'El paciente no existe');
+                return $this->render('solicitud/new.html.twig', array(
+                    'solicitud' => $solicitud,
+                    'formPaciente'=>$formPaciente->createView(),
+                    'form' => $form->createView(),
+                ));
+            }else{
+                $solicitud->setPaciente($paciente);
+            }
+
+            $medico=$this->getUser()->getPersona()->getMedicoCentro();
+            $solicitud->setMedico($medico[0]);
             $em->persist($solicitud);
             foreach ($solicitud->getLaboratorio() as $laboratorio) {
                 $detalleSolicitud= new DetalleSolicitud();
@@ -116,12 +133,14 @@ class SolicitudController extends Controller
                 $em->persist($detalleSolicitud);
             }
             $em->flush();
+            $this->get('session')->getFlashBag()->add('success', 'Se registro la solicitud correctamente');
 
             return $this->redirectToRoute('solicitud_edit', array('id' => $solicitud->getId()));
         }
 
         return $this->render('solicitud/new.html.twig', array(
             'solicitud' => $solicitud,
+            'formPaciente'=>$formPaciente->createView(),
             'form' => $form->createView(),
         ));
     }
@@ -170,20 +189,37 @@ class SolicitudController extends Controller
         foreach ($solicitud->getSolicitudDetalles() as $key => $detalle) {
             $solicitud->cargarLaboratorios($detalle->getLaboratorio());
         }
+        $paciente=new Paciente();
         $editForm = $this->createForm('SolicitudBundle\Form\SolicitudType', $solicitud);
+        $formPaciente= $this->createPacienteForm($paciente);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $em=$this->getDoctrine()->getManager();
+            if ($solicitud->getPacienteString()!=$solicitud->getPaciente()->getId()) {
+                $paciente2=$em->getRepository('SolicitudBundle:Paciente')->findOneById($solicitud->getPacienteString());
+                if (is_null($paciente2)) {
+                    $this->get('session')->getFlashBag()->add('error', 'El paciente no existe');
+                    return $this->render('solicitud/new.html.twig', array(
+                        'solicitud' => $solicitud,
+                        'formPaciente'=>$formPaciente->createView(),
+                        'form' => $form->createView(),
+                    ));
+                }else{
+                    $solicitud->setPaciente($paciente2);
+                }
+            }
+            
             $em->flush();
 
             $this->get('session')->getFlashBag()->add('success', 'Se guardaron los cambios');
 
-            return $this->redirectToRoute('solicitud_edit', array('id' => $solicitud->getId()));
+            return $this->redirectToRoute('solicitud_show', array('id' => $solicitud->getId()));
         }
 
         return $this->render('solicitud/edit.html.twig', array(
             'solicitud' => $solicitud,
+            'formPaciente'=>$formPaciente->createView(),
             'edit_form' => $editForm->createView()
         ));
     }
@@ -244,12 +280,14 @@ class SolicitudController extends Controller
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createDeleteForm(Solicitud $solicitud)
+    private function createPacienteForm(Paciente $paciente)
     {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('solicitud_delete', array('id' => $solicitud->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
+        $form = $this->createForm('SolicitudBundle\Form\PacienteType', $paciente,
+                array(
+            'action' => $this->generateUrl('paciente_create'),
+            'method' => 'POST',
+        ));
+        return $form
         ;
     }
 }

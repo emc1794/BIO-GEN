@@ -330,4 +330,45 @@ class Usuario implements AdvancedUserInterface, EquatableInterface,  \Serializab
     {
         return $this->persona;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->usuario = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add usuario
+     *
+     * @param \SolicitudBundle\Entity\Solicitud $usuario
+     *
+     * @return Usuario
+     */
+    public function addUsuario(\SolicitudBundle\Entity\Solicitud $usuario)
+    {
+        $this->usuario[] = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * Remove usuario
+     *
+     * @param \SolicitudBundle\Entity\Solicitud $usuario
+     */
+    public function removeUsuario(\SolicitudBundle\Entity\Solicitud $usuario)
+    {
+        $this->usuario->removeElement($usuario);
+    }
+
+    /**
+     * Get usuario
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
 }

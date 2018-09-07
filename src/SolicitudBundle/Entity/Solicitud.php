@@ -28,13 +28,6 @@ class Solicitud
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="nombrePaciente", type="string", length=100)
-     */
-    private $nombrePaciente;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="fechaRegistro", type="datetime")
@@ -58,7 +51,7 @@ class Solicitud
     /**
      * @var string
      *
-     * @ORM\Column(name="observacion", type="string", length=255)
+     * @ORM\Column(name="observacion", type="string", length=255,nullable=true)
      */
     private $observacion;
 
@@ -68,7 +61,29 @@ class Solicitud
      */
     private $solicitudDetalles;
 
+    /**
+     * Many detalles have One solicitud.
+     * @ORM\ManyToOne(targetEntity="MedicoCentro", inversedBy="solicitud")
+     * @ORM\JoinColumn(name="medico_id", referencedColumnName="id")
+     */
+    private $medico;
+
+    /**
+     * Many detalles have One solicitud.
+     * @ORM\ManyToOne(targetEntity="Paciente", inversedBy="solicitud")
+     * @ORM\JoinColumn(name="paciente_id", referencedColumnName="id")
+     */
+    private $paciente;
+
+    /**
+     * One Solicitud has Many SolicitudDetalles.
+     * @ORM\OneToMany(targetEntity="Asignacion", mappedBy="solicitud",cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $asignacion;
+
     private $laboratorios;
+
+    private $pacienteString;
 
     /**
      * @ORM\PrePersist
@@ -88,30 +103,6 @@ class Solicitud
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set nombrePaciente
-     *
-     * @param string $nombrePaciente
-     *
-     * @return Solicitud
-     */
-    public function setNombrePaciente($nombrePaciente)
-    {
-        $this->nombrePaciente = $nombrePaciente;
-
-        return $this;
-    }
-
-    /**
-     * Get nombrePaciente
-     *
-     * @return string
-     */
-    public function getNombrePaciente()
-    {
-        return $this->nombrePaciente;
     }
 
     /**
@@ -326,5 +317,100 @@ class Solicitud
 
     public function cargarLaboratorios($laboratorio){
         $this->laboratorios[]=$laboratorio;
+    }
+
+
+    /**
+     * Set paciente
+     *
+     * @param \SolicitudBundle\Entity\Paciente $paciente
+     *
+     * @return Solicitud
+     */
+    public function setPaciente(\SolicitudBundle\Entity\Paciente $paciente = null)
+    {
+        $this->paciente = $paciente;
+
+        return $this;
+    }
+
+    /**
+     * Get paciente
+     *
+     * @return \SolicitudBundle\Entity\Paciente
+     */
+    public function getPaciente()
+    {
+        return $this->paciente;
+    }
+
+    public function setPacienteString($pacienteString)
+    {
+        $this->pacienteString = $pacienteString;
+
+        return $this;
+    }
+
+    public function getPacienteString()
+    {
+        return $this->pacienteString;
+    }
+
+    /**
+     * Set medico
+     *
+     * @param \SolicitudBundle\Entity\MedicoCentro $medico
+     *
+     * @return Solicitud
+     */
+    public function setMedico(\SolicitudBundle\Entity\MedicoCentro $medico = null)
+    {
+        $this->medico = $medico;
+
+        return $this;
+    }
+
+    /**
+     * Get medico
+     *
+     * @return \SolicitudBundle\Entity\MedicoCentro
+     */
+    public function getMedico()
+    {
+        return $this->medico;
+    }
+
+    /**
+     * Add asignacion
+     *
+     * @param \SolicitudBundle\Entity\Asignacion $asignacion
+     *
+     * @return Solicitud
+     */
+    public function addAsignacion(\SolicitudBundle\Entity\Asignacion $asignacion)
+    {
+        $this->asignacion[] = $asignacion;
+
+        return $this;
+    }
+
+    /**
+     * Remove asignacion
+     *
+     * @param \SolicitudBundle\Entity\Asignacion $asignacion
+     */
+    public function removeAsignacion(\SolicitudBundle\Entity\Asignacion $asignacion)
+    {
+        $this->asignacion->removeElement($asignacion);
+    }
+
+    /**
+     * Get asignacion
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAsignacion()
+    {
+        return $this->asignacion;
     }
 }

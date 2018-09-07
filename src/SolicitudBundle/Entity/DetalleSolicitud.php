@@ -65,6 +65,14 @@ class DetalleSolicitud
     private $solicitud;
 
     /**
+     * One Solicitud has Many SolicitudDetalles.
+     * @ORM\OneToMany(targetEntity="Imagen", mappedBy="detalleSolicitud")
+     */
+    private $imagen;
+
+
+
+    /**
      * @ORM\PrePersist
      */
     public function prePresist()

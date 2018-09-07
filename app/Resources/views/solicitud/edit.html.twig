@@ -12,9 +12,14 @@
       <div class="clearfix"></div>
     </div>
     <div class="x_content">
-
+<div class="form_error"></div>
     {{ form_start(edit_form) }}
-        {{ form_row(edit_form.nombrePaciente) }}
+        <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+        <select class="select2-ajax"></select>
+      </div>
+        {{ form_row(edit_form.pacienteString) }}
+        <!-- Large modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-md">Registrar paciente</button>
         <div class="row">
         {% for name, choices in edit_form.laboratorio.vars.choices %}
             <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
@@ -44,6 +49,111 @@
      </div>
     </div>
 </div>
+
+<div class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-dialog modal-md">
+            <div class="modal-content">
+
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Registrar Paciente</h4>
+              </div>
+              <div class="modal-body">
+                {% include 'paciente/new.html.twig' with {'formPaciente': formPaciente} %}
+              </div>
+            </div>
+          </div>
+        </div>
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('.select2-ajax').select2({
+      ajax: {
+                dataType : "json",
+                url: "{{path('paciente_ajax')}}",
+                processResults: function (data) {
+
+                    return {
+                        results: data.results
+                    };
+                },
+                data:function (params) {
+                    var query = {
+                        search: params.term
+                }
+
+                    // Query parameters will be ?search=[term]&type=public
+                return query;
+                }
+                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
+            },
+            language: "es",
+            allowClear: true,
+            placeholder: 'Busque la persona',
+            minimumInputLength: 3,
+            width: '100%'
+    });
+
+    var data = {id:{{solicitud.paciente.id}},text:"{{solicitud.paciente.nombreCompleto}}"};
+      var newOption = new Option(data.text, data.id, false, false);
+      $('.select2-ajax').append(newOption).trigger('change');
+
+    document.getElementById("solicitudbundle_solicitud_pacienteString").value=data.id;
+
+    $(document).on(
+            "submit","#form-paciente",function(e){//se activa el evento cuando hago submit para agregar persona
+                e.preventDefault();//cancela en submit por defecto para que yo  haga por ajax
+
+                var action=document.getElementById('form-paciente').getAttribute("action");
+                var method=document.getElementById('form-paciente').getAttribute("method");
+
+                $('.bs-example-modal-md').modal('hide');
+                $.ajax({//preticion ajax
+                    url: action,
+                    type: method,
+                    data: $(this).serialize()
+                    })
+                    .done(function (data, textStatus, jqXHR) {
+                      console.log(jqXHR.responseJSON);
+                        if (typeof data.message !== 'undefined') {
+                            if (jqXHR.responseJSON.hasOwnProperty('form')) {
+                                $('.modal-body').html(jqXHR.responseJSON.form);
+                            }
+                            if(jqXHR.responseJSON.hasOwnProperty('select')) {
+                              var data = jqXHR.responseJSON.select;
+                              console.log(data);
+                              var newOption = new Option(data.text, data.id, false, false);
+                              $('.select2-ajax').append(newOption).trigger('change');
+                            }
+                        }
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        if (typeof jqXHR.responseJSON !== 'undefined') {
+                            if (jqXHR.responseJSON.hasOwnProperty('form')) {
+                                $('.modal-body').html(jqXHR.responseJSON.form);
+                            }
+                            $('.form_error').html(jqXHR.responseJSON.message);
+                        } else {
+                            alert(errorThrown);
+                        }
+                    });
+            }
+        );
+
+    $('.select2-ajax').on('select2:select',function(e){
+            var data=e.params.data;
+            document.getElementById("solicitudbundle_solicitud_pacienteString").value=data.id;
+        });
+
+    $('.select2-ajax').on('select2:unselect',function(e){
+        var data=e.params.data;
+        document.getElementById("solicitudbundle_solicitud_pacienteString").value="";
+    });
+});
+</script>
 {% endblock %}
 
 

@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @ORM\Table(name="solicitud")
  * @ORM\Entity(repositoryClass="SolicitudBundle\Repository\SolicitudRepository")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Solicitud
 {
@@ -27,13 +28,6 @@ class Solicitud
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="nombrePaciente", type="string", length=100)
-     */
-    private $nombrePaciente;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="fechaRegistro", type="datetime")
@@ -43,7 +37,7 @@ class Solicitud
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fechaEnvio", type="datetime")
+     * @ORM\Column(name="fechaEnvio", type="datetime" , nullable=true)
      */
     private $fechaEnvio;
 
@@ -57,17 +51,48 @@ class Solicitud
     /**
      * @var string
      *
-     * @ORM\Column(name="observacion", type="string", length=255, nullable=true)
+     * @ORM\Column(name="observacion", type="string", length=255,nullable=true)
      */
     private $observacion;
 
     /**
      * One Solicitud has Many SolicitudDetalles.
-     * @ORM\OneToMany(targetEntity="DetalleSolicitud", mappedBy="solicitud")
+     * @ORM\OneToMany(targetEntity="DetalleSolicitud", mappedBy="solicitud",cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $solicitudDetalles;
 
+    /**
+     * Many detalles have One solicitud.
+     * @ORM\ManyToOne(targetEntity="MedicoCentro", inversedBy="solicitud")
+     * @ORM\JoinColumn(name="medico_id", referencedColumnName="id")
+     */
+    private $medico;
+
+    /**
+     * Many detalles have One solicitud.
+     * @ORM\ManyToOne(targetEntity="Paciente", inversedBy="solicitud")
+     * @ORM\JoinColumn(name="paciente_id", referencedColumnName="id")
+     */
+    private $paciente;
+
+    /**
+     * One Solicitud has Many SolicitudDetalles.
+     * @ORM\OneToMany(targetEntity="Asignacion", mappedBy="solicitud",cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $asignacion;
+
     private $laboratorios;
+
+    private $pacienteString;
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function prePresist()
+    {
+        $this->estado='B';
+        $this->fechaRegistro=new \DateTime();
+    }
 
 
     /**
@@ -78,30 +103,6 @@ class Solicitud
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set nombrePaciente
-     *
-     * @param string $nombrePaciente
-     *
-     * @return Solicitud
-     */
-    public function setNombrePaciente($nombrePaciente)
-    {
-        $this->nombrePaciente = $nombrePaciente;
-
-        return $this;
-    }
-
-    /**
-     * Get nombrePaciente
-     *
-     * @return string
-     */
-    public function getNombrePaciente()
-    {
-        return $this->nombrePaciente;
     }
 
     /**
@@ -128,6 +129,11 @@ class Solicitud
         return $this->fechaRegistro;
     }
 
+    public function getFechaRegistroString()
+    {
+        return (is_null($this->fechaRegistro))?'':$this->fechaRegistro->format('d-m-Y h:m');
+    }
+
     /**
      * Set fechaEnvio
      *
@@ -152,6 +158,11 @@ class Solicitud
         return $this->fechaEnvio;
     }
 
+    public function getFechaEnvioString()
+    {
+        return (is_null($this->fechaEnvio))?'':$this->fechaEnvio->format('d-m-Y h:m');
+    }
+
     /**
      * Set estado
      *
@@ -174,6 +185,21 @@ class Solicitud
     public function getEstado()
     {
         return $this->estado;
+    }
+
+    public function getEstadoString()
+    {
+        $nuevoEstado='';
+        switch ($this->estado)
+        {
+            case 'B':
+                $nuevoEstado='Borrador|B|';
+                break;
+            case 'E':
+                $nuevoEstado='Enviado|E|';
+                break;
+        }
+        return $nuevoEstado;
     }
 
     /**
@@ -221,6 +247,7 @@ class Solicitud
      */
     public function removeSolicitudDetalle(\SolicitudBundle\Entity\DetalleSolicitud $solicitudDetalle)
     {
+        $solicitudDetalle->setSolicitud(null);
         $this->solicitudDetalles->removeElement($solicitudDetalle);
     }
 
@@ -232,5 +259,100 @@ class Solicitud
     public function getSolicitudDetalles()
     {
         return $this->solicitudDetalles;
+    }
+
+    /**
+     * Add Laboratorio
+     *
+     * @param \SolicitudBundle\Entity\Laboratorio $laboratorio
+     *
+     * @return Solicitud
+     */
+    public function addlaboratorio(\SolicitudBundle\Entity\Laboratorio $laboratorio)
+    {
+        if (!$this->siExisteDetalle($laboratorio)) {
+            $detalleNuevo=new DetalleSolicitud();
+            $detalleNuevo->setLaboratorio($laboratorio);
+            $detalleNuevo->setSolicitud($this);
+            $this->addSolicitudDetalle($detalleNuevo);
+            $this->laboratorios[] = $laboratorio;
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * Remove Laboratorio
+     *
+     * @param \SolicitudBundle\Entity\Laboratorio $laboratorio
+     */
+    public function removeLaboratorio(\SolicitudBundle\Entity\Laboratorio $laboratorio)
+    {
+        if ($this->siExisteDetalle($laboratorio)) {
+            $this->removeSolicitudDetalle($this->siExisteDetalle($laboratorio));
+        }
+        //dump($this->getSolicitudDetalles());die();
+        unset($this->laboratorios[array_search($laboratorio,$this->laboratorios)]);
+    }
+
+    /**
+     * Get Laboratorio
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getLaboratorio()
+    {
+        return $this->laboratorios;
+    }
+
+    public function siExisteDetalle($laboratorio){
+        foreach ($this->solicitudDetalles as $key => $detalle) {
+            if ($detalle->getLaboratorio()->getId()==$laboratorio->getId()) {
+                return $detalle;
+            }
+        }
+        return false;
+    }
+
+    public function cargarLaboratorios($laboratorio){
+        $this->laboratorios[]=$laboratorio;
+    }
+
+
+    /**
+     * Set paciente
+     *
+     * @param \SolicitudBundle\Entity\Paciente $paciente
+     *
+     * @return Solicitud
+     */
+    public function setPaciente(\SolicitudBundle\Entity\Paciente $paciente = null)
+    {
+        $this->paciente = $paciente;
+
+        return $this;
+    }
+
+    /**
+     * Get paciente
+     *
+     * @return \SolicitudBundle\Entity\Paciente
+     */
+    public function getPaciente()
+    {
+        return $this->paciente;
+    }
+
+    public function setPacienteString($pacienteString)
+    {
+        $this->pacienteString = $pacienteString;
+
+        return $this;
+    }
+
+    public function getPacienteString()
+    {
+        return $this->pacienteString;
     }
 }

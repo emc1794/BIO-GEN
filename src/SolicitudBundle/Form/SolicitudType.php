@@ -14,7 +14,7 @@ class SolicitudType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-        ->add('nombrePaciente')
+        ->add('pacienteString','hidden')
         ->add('observacion','textarea',array('required'=>false))
         ->add('laboratorio', 'entity', array(
                 'class' => 'SolicitudBundle:Laboratorio',

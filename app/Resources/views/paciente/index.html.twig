@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block page_content %}
+    <h1>Pacientes list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for paciente in pacientes %}
+            <tr>
+                <td><a href="{{ path('paciente_show', { 'id': paciente.id }) }}">{{ paciente.id }}</a></td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('paciente_show', { 'id': paciente.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('paciente_edit', { 'id': paciente.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('paciente_new') }}">Create a new paciente</a>
+        </li>
+    </ul>
+{% endblock %}

@@ -15,8 +15,8 @@ class SolicitudRepository extends \Doctrine\ORM\EntityRepository
 	public function listadoAjax($cantidad,$comienza,$campo,$dir,$buscar)
     {
         $em = $this->getEntityManager();
-        $consul = $em->createQuery('SELECT s FROM SolicitudBundle:Solicitud s
-        WHERE s.nombrePaciente LIKE :value
+        $consul = $em->createQuery('SELECT s FROM SolicitudBundle:Solicitud s inner join s.paciente p
+        WHERE p.paterno LIKE :value
         ORDER BY '.$campo.' '.$dir)
             ->setParameter('value',$buscar.'%')
             ->setFirstResult($comienza)

@@ -1,10 +1,19 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+<style>
+    @media print{
+        tr.noPrint{
+            display: none !important;
+        }
+    }
+</style>
+{% endblock %}
 {% block page_content %}
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
         <div class="x_title">
-          <h2><b>Solicitud de laboratorio </b><small>Ver</small></h2>
+          <h2><b>Solicitud de Reparacion de Artefacto electronico </b><small>Ver</small></h2>
           <div class="clearfix"></div>
         </div>
         <div class="x_content">
@@ -15,36 +24,28 @@
                         <tr>
                             <th>Nº</th>
                             <td><b>{{solicitud.id}}</b></td>
-                            <th>Paciente</th>
-                            <td>{{solicitud.paciente.nombreCompleto}}</td>
+                            <th>Cliente</th>
+                            <td>{{solicitud.cliente.nombreCompleto}}</td>
                         </tr>
                         <tr>
-                            <th>Sexo</th>
-                            <td><b>{{solicitud.paciente.sexoString}}</b></td>
-                            <th>Fecha de Nac.</th>
-                            <td>{{solicitud.paciente.fechaNacimientoString}}</td>
-                        </tr>
-                        <tr>
-                            <th>Fecha de envio</th>
-                            <td>{{solicitud.fechaEnvioString}}</td>
+                            <th>Carnet de Identidad</th>
+                            <td>{{solicitud.cliente.ci}}</td>
                             <th>Fecha de registro</th>
                             <td>{{solicitud.fechaRegistroString}}</td>
                         </tr>
                         <tr>
-                            
-                            <th>Observacion</th>
-                            <td colspan="3">{{solicitud.observacion}}</td>
-                        </tr>
-                        <tr>
                             <th>Estado</th>
                             <td>{{solicitud.estadoString}}</td>
+                            <th>Observacion</th>
+                            <td >{{solicitud.observacion}}</td>
+                        </tr>
+                        <tr class="noPrint">
+                            
                             <th>opciones</th>
-                            <td>
-                                {% if solicitud.estado == 'B'%}
-                                <a href="{{path('solicitud_enviar',{id:solicitud.id})}}" class="btn btn-default btn-xs"> <i class="fa fa-share-square-o"> Enviar</i></a>
-                                <a href="{{path('solicitud_edit',{id:solicitud.id})}}" class="btn btn-warning btn-xs"> <i class="fa fa-edit"> Editar</i></a>
-                                <a href="{{path('solicitud_delete',{id:solicitud.id})}}" class="btn btn-danger btn-xs"> <i class="fa fa-edit"> Eliminar</i></a>
-                                {% endif %}
+                            <td colspan="3">
+                                <a href="{{path('solicitud_reparacion_edit',{id:solicitud.id})}}" class="btn btn-warning btn-xs"> <i class="fa fa-edit"> Editar</i></a>
+                                <a href="{{path('solicitud_reparacion_delete',{id:solicitud.id})}}" class="btn btn-danger btn-xs"> <i class="fa fa-edit"> Eliminar</i></a>
+                                <a onclick="window.print();" class="btn btn-default btn-xs"> <i class="fa fa-print"> Imprimir</i></a>
                             </td>
                         </tr>
                         </tbody>
@@ -55,16 +56,18 @@
                         <thead>
                             <tr>
                                 <th>Nº</th>
-                                <th>Laboratorio</th>
-                                <th>Categoria</th>
+                                <th>Tipo de artefacto</th>
+                                <th>Descripcion</th>
+                                <th>Problema</th>
                             </tr>
                         </thead>
                         <tbody>
                         {% for detalle in solicitud.solicitudDetalles %}
                         <tr>
                             <td>{{detalle.id}}</td>
-                            <td>{{detalle.laboratorio.nombre}}</td>
-                            <td>{{detalle.laboratorio.categoria.nombre}}</td>
+                            <td>{{detalle.artefacto.nombre}}</td>
+                            <td>{{detalle.descripcion}}</td>
+                            <td>{{detalle.observacion}}</td>
                         </tr>
                         {% endfor %}
                         </tbody>

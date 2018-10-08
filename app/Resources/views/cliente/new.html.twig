@@ -1,0 +1,17 @@
+{{ form_start(formCliente,{'attr':{'id':'form-cliente'}}) }}
+        {{form_row(formCliente.nombre)}}
+        {{form_row(formCliente.paterno)}}
+        {{form_row(formCliente.materno)}}
+        {{form_row(formCliente.ci)}}
+        {{form_row(formCliente.fechaNacimiento)}}
+        {% for child  in formCliente.sexo %}
+        <p>
+            {{form_row(child,{'attr':{'class':'flat'}})}}
+        </p>
+        {% endfor %}
+        {{form_row(formCliente.telefono)}}
+        {{form_row(formCliente.email)}}
+        {{form_row(formCliente.direccion)}}
+        <input id="form_submit" type="submit" value="Registrar"  class="btn btn-primary" />
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+    {{ form_end(formCliente) }}

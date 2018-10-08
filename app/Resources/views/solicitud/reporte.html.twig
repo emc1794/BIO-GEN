@@ -68,8 +68,8 @@
     <div id="cabecera" class="row">
             <table with="100%" class="table table-bordered">
                 <tr>
-                    <th rowspan="2" style="text-align: center;" width="30%"><img src="{{ asset('lab-3.jpg') }}" alt="..." class="logo">Laboratorio BIO-GEN </th>
-                    <th rowspan="2" style="text-align: center;">Reporte de solucitud enviada</th>
+                    <th rowspan="2" style="text-align: center;" width="30%"><i class="fa fa-microchip fa-2x" aria-hidden="true"></i> Electronica Total S.A </th>
+                    <th rowspan="2" style="text-align: center;">Reporte de Artefactos recibidos</th>
                     <th  width="30%">Inicio : {{inicio|date('d-m-Y')}}</th>
                 </tr>
                 <tr>
@@ -81,21 +81,21 @@
                 <table with="100%" class="table table-bordered">
                     <thead>
                         <tr>
-                                <th>N°</th>
-                                <th>Paciente</th>
+                                <th>N° de orden</th>
+                                <th>Cliente</th>
                                 <th>Fecha de Registro</th>
-                                <th>Fecha de Envio</th>
-                                <th>Cantidad de laboratorios</th>
+                                <th>Descripcion</th>
+                                <th>Problema</th>
                             </tr>
                     </thead>
                     <tbody>
                         {% for item in resultado %}
                         <tr>
-                            <td>{{item.id}}</td>
-                            <td>{{item.paciente.nombreCompleto}}</td>
-                            <td>{{item.fechaRegistroString}}</td>
-                            <td>{{item.fechaEnvioString}}</td>
-                            <td>{{item.solicitudDetalles|length}}</td>
+                            <td>{{item.solicitud.id}}</td>
+                            <td>{{item.solicitud.cliente.nombreCompleto}}</td>
+                            <td>{{item.solicitud.fechaRegistroString}}</td>
+                            <td>{{item.descripcion}}</td>
+                            <td>{{item.observacion}}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

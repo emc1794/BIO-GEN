@@ -1,0 +1,40 @@
+<?php
+
+namespace ReparacionBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * JefeTecnico
+ *
+ * @ORM\Table(name="jefe_tecnico")
+ * @ORM\Entity(repositoryClass="ReparacionBundle\Repository\JefeTecnicoRepository")
+ */
+class JefeTecnico extends Persona
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Asignacion", mappedBy="asignador")
+     */
+    private $asignacion;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return Parent::getId();
+    }
+}
+

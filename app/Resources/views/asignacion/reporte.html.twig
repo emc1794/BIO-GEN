@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+    REPORTE
+{% endblock %}
+{% block stylesheets %}
+<style>
+    @media print{
+        div.form{
+            display: none !important;
+        }
+    }
+    @page {
+        size: letter portrait; 
+        }
+</style>
+{% endblock %}
+
+{% block page_content %}
+<div class="row form">
+    <div class="col-md-12 col-sm-12  col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><i class="fa fa-edit" aria-hidden="true"></i> Generar Reportes</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+            <div class="well">
+                {{ form_start(form,{'attr':{'class':'form-horizontal form-label-left'}}) }}
+                                <div class="form-group col-md-5 col-sm-6 col-xs-12">
+                                    {{ form_label(form.inicio) }}
+                                    <div class="col-md-9 col-sm-9 col-xs-9">
+                                        {{ form_widget(form.inicio) }}
+                                    </div>
+                                    {{ form_errors(form.inicio) }}
+
+                                </div>
+                                <div class="form-group col-md-5 col-sm-6 col-xs-12">
+                                    {{ form_label(form.fin) }}
+                                    <div class="col-md-9 col-sm-9 col-xs-9">
+                                        {{ form_widget(form.fin) }}
+                                    </div>
+                                    {{ form_errors(form.fin) }}
+
+                                </div>
+                                <div class="form-group col-md-2 col-sm-3 col-sm-offset-2 col-xs-12 ">
+                                <input type="submit" value="Generar" class="btn btn-success btn-xs" />
+                                {% if estado %}
+                                <button class="btn btn-default btn-xs" onclick="imprimirDiv()"> Imprimir</button>
+                                {% endif %}
+                                </div>
+                {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% if estado %}
+<div class="row form">
+    <div class="col-md-12 col-sm-12  col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><i class="fa fa-edit" aria-hidden="true"></i> Generar Reportes</h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+<div id="print" class="row">
+    <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">
+    <div id="cabecera" class="row">
+            <table with="100%" class="table table-bordered">
+                <tr>
+                    <th rowspan="2" style="text-align: center;" width="30%"><i class="fa fa-microchip fa-2x" aria-hidden="true"></i> Electronica Total S.A </th>
+                    <th rowspan="2" style="text-align: center;">Reporte de cantidad de artefactos asignados por tecnico</th>
+                    <th  width="30%">Inicio : {{inicio|date('d-m-Y')}}</th>
+                </tr>
+                <tr>
+                    <th>Fin : {{fin|date('d-m-Y')}}</th>
+                </tr>
+            </table>
+        </div>
+        <div id="datos" class="row">
+                <table with="100%" class="table table-bordered">
+                    <thead>
+                        <tr>
+                                <th>Tecnico</th>
+                                <th>Cantidad</th>
+                            </tr>
+                    </thead>
+                    <tbody>
+                    {% set total = 0 %}
+                        {% for item in resultado %}
+                        <tr>
+                            <td>{{item.tecnico}}</td>
+                            <td>{{item.cantidad}}</td>
+                            {% set total=total+item.cantidad %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Total</th>
+                            <th>{{total}}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+{% endif %}
+{% endblock %}
+{% block javascripts %}
+<script>
+    function imprimirDiv()
+    {
+     var contenido= document.getElementById('print').innerHTML;
+     var contenidoOriginal= document.body.innerHTML;
+
+     document.body.innerHTML = contenido;
+
+     window.print();
+
+     document.body.innerHTML = contenidoOriginal;
+    }
+
+</script>
+{% endblock %}

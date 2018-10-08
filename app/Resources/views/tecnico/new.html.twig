@@ -1,0 +1,18 @@
+{{ form_start(formTecnico,{'attr':{'id':'form-tecnico'}}) }}
+        {{form_row(formTecnico.nombre)}}
+        {{form_row(formTecnico.paterno)}}
+        {{form_row(formTecnico.materno)}}
+        {{form_row(formTecnico.ci)}}
+        {{form_row(formTecnico.fechaNacimiento)}}
+        {% for child  in formTecnico.sexo %}
+        <p>
+            {{form_row(child,{'attr':{'class':'flat'}})}}
+        </p>
+        {% endfor %}
+        {{form_row(formTecnico.especialidad)}}
+        {{form_row(formTecnico.telefono)}}
+        {{form_row(formTecnico.email)}}
+        {{form_row(formTecnico.direccion)}}
+        <input id="form_submit" type="submit" value="Registrar"  class="btn btn-primary" />
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+    {{ form_end(formTecnico) }}

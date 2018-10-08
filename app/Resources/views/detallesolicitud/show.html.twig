@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Detallesolicitud</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ detalleSolicitud.id }}</td>
+            </tr>
+            <tr>
+                <th>Fecharegistro</th>
+                <td>{% if detalleSolicitud.fechaRegistro %}{{ detalleSolicitud.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+            <tr>
+                <th>Estado</th>
+                <td>{{ detalleSolicitud.estado }}</td>
+            </tr>
+            <tr>
+                <th>Descripcion</th>
+                <td>{{ detalleSolicitud.descripcion }}</td>
+            </tr>
+            <tr>
+                <th>Serie</th>
+                <td>{{ detalleSolicitud.serie }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('detallesolicitud_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('detallesolicitud_edit', { 'id': detalleSolicitud.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

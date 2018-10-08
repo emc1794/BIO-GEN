@@ -2,7 +2,7 @@
 # https://symfony.com/doc/current/security.html
 security:
     encoders:
-        SolicitudBundle\Entity\Usuario:
+        ReparacionBundle\Entity\Usuario:
             algorithm:           md5
             encode_as_base64:    false
             iterations:          1
@@ -10,7 +10,7 @@ security:
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
         usuEmpAdm:
-            entity: { class: SolicitudBundle\Entity\Usuario, property: login }
+            entity: { class: ReparacionBundle\Entity\Usuario, property: login }
 
     firewalls:
           # disables authentication for assets and the profiler, adapt it according to your needs
@@ -27,7 +27,7 @@ security:
                  check_path: login_check
                  default_target_path: /
                  always_use_default_target_path: true
-             access_denied_url: /login
+             access_denied_url: login
              logout:
                  path: logout
                  target: login
@@ -39,6 +39,6 @@ security:
             # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
 
     access_control:
-          - { path: ^/login,       roles: IS_AUTHENTICATED_ANONYMOUSLY }
-          #- { path: ^/,       roles: IS_AUTHENTICATED_FULLY }
-          #- { path: ^/*,      roles: IS_AUTHENTICATED_FULLY }
+          - { path: ^/solicitud/login,       roles: IS_AUTHENTICATED_ANONYMOUSLY }
+          - { path: ^/,       roles: IS_AUTHENTICATED_FULLY }
+          - { path: ^/*,      roles: IS_AUTHENTICATED_FULLY }

@@ -1,44 +1,50 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}
-    REGISTRAR
+{% form_theme form _self %}
+{% block _reparacionbundle_solicitud_solicitudDetalles_entry_widget %}
+    <div class="form-group col-md-6 col-sm-6 col-xs-12">
+        {{form_label(form.artefacto)}}
+        {{form_widget(form.artefacto)}}
+    </div>
+    <div class="form-group col-md-6 col-sm-6 col-xs-12">
+        {{form_label(form.serie)}}
+        {{form_widget(form.serie)}}
+    </div>
+    <div class="form-group col-md-6 col-sm-6 col-xs-12">
+        {{form_label(form.descripcion)}}
+        {{form_widget(form.descripcion)}}
+    </div>
+    <div class="form-group col-md-6 col-sm-6 col-xs-12">
+        {{form_label(form.observacion)}}
+        {{form_widget(form.observacion)}}
+    </div>
 {% endblock %}
+
 {% block page_content %}
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
     <div class="x_title">
-      <h2><b>Registro de solicitud de laboratorio </b><small>Formulario</small></h2>
+      <h2><b>Registro de solicitud de reparacion </b><small>Formulario</small></h2>
       <div class="clearfix"></div>
     </div>
     <div class="x_content">
     <div class="form_error"></div>
 
     {{ form_start(form) }}
-      <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+      <div class="form-group">
+      <label class="label-control">Cliente</label>
         <select class="select2-ajax"></select>
       </div>
-        {{ form_row(form.pacienteString) }}
-        <!-- Large modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-md">Registrar paciente</button>
-
-        
-        <div class="row">
-        {% for name, choices in form.laboratorio.vars.choices %}
-            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-            <h4><b>{{name}}</b></h4>
-                <ul class="to_do">
-                    {% for key,choice in choices %}
-                      <li>
-                        <p>
-                            {{ form_widget(form.laboratorio[key],{'attr':{'class':'flat'}}) }}
-                            {{ form_label(form.laboratorio[key]) }}
-                        </p>
-                      </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endfor %}
-        </div>
+      {{ form_row(form.clienteString) }}
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-md">Registrar Cliente</button>
+      <div class="artefactos form-group"
+                             data-prototype="{{ form_widget(form.solicitudDetalles.vars.prototype)|e('html_attr') }}">
+                             <label class="label-control">Artefactos Electronicos</label>
+                             {% for detalle in form.solicitudDetalles %}
+                               <div class="registro">
+                                   {{form_widget(detalle)}}
+                               </div>
+                               {% endfor %}
+                        </div>
         {{ form_row(form.observacion) }}
         <div class="ln_solid"></div>
           <div class="form-group">
@@ -58,53 +64,55 @@
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel">Registrar Paciente</h4>
+                <h4 class="modal-title" id="myModalLabel">Registrar Cliente</h4>
               </div>
               <div class="modal-body">
-                {% include 'paciente/new.html.twig' with {'formPaciente': formPaciente} %}
+                {% include 'cliente/new.html.twig' with {'formCliente': formCliente} %}
               </div>
             </div>
           </div>
-        </div>
+</div>
 {% endblock %}
 
 {% block javascripts %}
 <script type="text/javascript">
-  $(document).ready(function() {
-    $('.select2-ajax').select2({
-      ajax: {
-                dataType : "json",
-                url: "{{path('paciente_ajax')}}",
-                processResults: function (data) {
+    var $collectionHolder;
 
-                    return {
-                        results: data.results
-                    };
+    // setup an "add a tag" link
+    var $addTagButton = $('<a class="add_tag_link"><b><u><i class="fas fa-plus"></i>Añadir artefacto electronico</u></b></a>');
+    var $newLinkLi = $('<div class="form-group"></div>').append($addTagButton);
+
+    jQuery(document).ready(function() {
+        $('.select2-ajax').select2({
+          ajax: {
+                    dataType : "json",
+                    url: "{{path('cliente_ajax')}}",
+                    processResults: function (data) {
+                        return {
+                            results: data.results
+                        };
+                    },
+                    data:function (params) {
+                        var query = {
+                            search: params.term
+                    }
+                        // Query parameters will be ?search=[term]&type=public
+                    return query;
+                    }
+                    // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
                 },
-                data:function (params) {
-                    var query = {
-                        search: params.term
-                }
+                language: "es",
+                allowClear: true,
+                placeholder: 'Busque la persona',
+                minimumInputLength: 3,
+                width: '100%'
+        });
 
-                    // Query parameters will be ?search=[term]&type=public
-                return query;
-                }
-                // Additional AJAX parameters go here; see the end of this chapter for the full code of this example
-            },
-            language: "es",
-            allowClear: true,
-            placeholder: 'Busque la persona',
-            minimumInputLength: 3,
-            width: '100%'
-    });
-
-    $(document).on(
-            "submit","#form-paciente",function(e){//se activa el evento cuando hago submit para agregar persona
+        $(document).on(
+            "submit","#form-cliente",function(e){//se activa el evento cuando hago submit para agregar persona
                 e.preventDefault();//cancela en submit por defecto para que yo  haga por ajax
-
-                var action=document.getElementById('form-paciente').getAttribute("action");
-                var method=document.getElementById('form-paciente').getAttribute("method");
-
+                var action=document.getElementById('form-cliente').getAttribute("action");
+                var method=document.getElementById('form-cliente').getAttribute("method");
                 $('.bs-example-modal-md').modal('hide');
                 $.ajax({//preticion ajax
                     url: action,
@@ -119,9 +127,7 @@
                             }
                             if(jqXHR.responseJSON.hasOwnProperty('select')) {
                               var data = jqXHR.responseJSON.select;
-                              var newOption = new Option(data.text, data.id, false, false);
-                              $('.select2-ajax').append(newOption).trigger('change');
-                              document.getElementById("solicitudbundle_solicitud_pacienteString").value=data.id;
+                              alert("Se registro el cliente "+data.text);
                             }
                         }
                     })
@@ -130,7 +136,7 @@
                             if (jqXHR.responseJSON.hasOwnProperty('form')) {
                                 $('.modal-body').html(jqXHR.responseJSON.form);
                             }
-                            $('.form_error').html(jqXHR.responseJSON.message);
+                            alert(jqXHR.responseJSON.message);
                         } else {
                             alert(errorThrown);
                         }
@@ -138,20 +144,74 @@
             }
         );
 
-    $('.select2-ajax').on('select2:select',function(e){
+        $('.select2-ajax').on('select2:select',function(e){
             var data=e.params.data;
-            document.getElementById("solicitudbundle_solicitud_pacienteString").value=data.id;
+            document.getElementById("reparacionbundle_solicitud_clienteString").value=data.id;
+        });
+        $('.select2-ajax').on('select2:change',function(e){
+                var data=e.params.data;
+                document.getElementById("reparacionbundle_solicitud_clienteString").value=data.id;
+            });
+        $('.select2-ajax').on('select2:unselect',function(e){
+            var data=e.params.data;
+            document.getElementById("reparacionbundle_solicitud_clienteString").value="";
         });
 
-    $('.select2-ajax').on('select2:change',function(e){
-            var data=e.params.data;
-            document.getElementById("solicitudbundle_solicitud_pacienteString").value=data.id;
+        // Get the ul that holds the collection of tags
+        $collectionHolder = $('div.artefactos');
+
+        $collectionHolder.find("div[class='registro']").each(function() {
+            addTagFormDeleteLink($(this));
         });
 
-    $('.select2-ajax').on('select2:unselect',function(e){
-        var data=e.params.data;
-        document.getElementById("solicitudbundle_solicitud_pacienteString").value="";
+        // add the "add a tag" anchor and li to the tags ul
+        $collectionHolder.append($newLinkLi);
+
+        // count the current form inputs we have (e.g. 2), use that as the new
+        // index when inserting a new item (e.g. 2)
+        $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+        $addTagButton.on('click', function(e) {
+            // add a new tag form (see next code block)
+            addTagForm($collectionHolder, $newLinkLi);
+        });
     });
-});
+
+    function addTagForm($collectionHolder, $newLinkLi) {
+        // Get the data-prototype explained earlier
+        var prototype = $collectionHolder.data('prototype');
+
+        // get the new index
+        var index = $collectionHolder.data('index');
+
+        var newForm = prototype;
+        // You need this only if you didn't set 'label' => false in your tags field in TaskType
+        // Replace '__name__label__' in the prototype's HTML to
+        // instead be a number based on how many items we have
+        // newForm = newForm.replace(/__name__label__/g, index);
+
+        // Replace '__name__' in the prototype's HTML to
+        // instead be a number based on how many items we have
+        newForm = newForm.replace(/__name__/g, index);
+
+        // increase the index with one for the next item
+        $collectionHolder.data('index', index + 1);
+
+        // Display the form in the page in an li, before the "Add a tag" link li
+        var $newFormLi = $('<div class="registro"></div>').append(newForm);
+        addTagFormDeleteLink($newFormLi);
+        $newLinkLi.before($newFormLi);
+        
+    }
+
+    function addTagFormDeleteLink($tagFormLi) {
+    var $removeFormButton = $('<button type="button" class="btn btn-danger btn-xs">Eliminar registro</button>');
+    $tagFormLi.append($removeFormButton);
+
+    $removeFormButton.on('click', function(e) {
+        // remove the li for the tag form
+        $tagFormLi.remove();
+    });
+}
 </script>
 {% endblock %}

@@ -1,0 +1,180 @@
+<?php
+
+namespace ReparacionBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Solucion
+ *
+ * @ORM\Table(name="solucion")
+ * @ORM\Entity(repositoryClass="ReparacionBundle\Repository\SolucionRepository")
+ */
+class Solucion
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="string", length=255)
+     */
+    private $descripcion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estado", type="string", length=1)
+     */
+    private $estado;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fechaRegistro", type="datetime")
+     */
+    private $fechaRegistro;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="monto", type="decimal", precision=10, scale=2)
+     */
+    private $monto;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Entrega", mappedBy="solucion")
+     */
+    private $entrega;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Pago", mappedBy="solucion")
+     */
+    private $pago;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Asignacion", inversedBy="solucion")
+     * @ORM\JoinColumn(name="asignacion_id", referencedColumnName="id")
+     */
+    private $asignacion;
+
+    /**
+     * @ORM\OneToMany(targetEntity="DetalleRepuesto", mappedBy="solucion",cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $detalleRepuesto;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set descripcion
+     *
+     * @param string $descripcion
+     *
+     * @return Solucion
+     */
+    public function setDescripcion($descripcion)
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    /**
+     * Get descripcion
+     *
+     * @return string
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param string $estado
+     *
+     * @return Solucion
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return string
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /**
+     * Set fechaRegistro
+     *
+     * @param \DateTime $fechaRegistro
+     *
+     * @return Solucion
+     */
+    public function setFechaRegistro($fechaRegistro)
+    {
+        $this->fechaRegistro = $fechaRegistro;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaRegistro
+     *
+     * @return \DateTime
+     */
+    public function getFechaRegistro()
+    {
+        return $this->fechaRegistro;
+    }
+
+    /**
+     * Set monto
+     *
+     * @param string $monto
+     *
+     * @return Solucion
+     */
+    public function setMonto($monto)
+    {
+        $this->monto = $monto;
+
+        return $this;
+    }
+
+    /**
+     * Get monto
+     *
+     * @return string
+     */
+    public function getMonto()
+    {
+        return $this->monto;
+    }
+}
+

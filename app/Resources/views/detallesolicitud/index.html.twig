@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Detallesolicituds list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Fecharegistro</th>
+                <th>Estado</th>
+                <th>Descripcion</th>
+                <th>Serie</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for detalleSolicitud in detalleSolicituds %}
+            <tr>
+                <td><a href="{{ path('detallesolicitud_show', { 'id': detalleSolicitud.id }) }}">{{ detalleSolicitud.id }}</a></td>
+                <td>{% if detalleSolicitud.fechaRegistro %}{{ detalleSolicitud.fechaRegistro|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ detalleSolicitud.estado }}</td>
+                <td>{{ detalleSolicitud.descripcion }}</td>
+                <td>{{ detalleSolicitud.serie }}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('detallesolicitud_show', { 'id': detalleSolicitud.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('detallesolicitud_edit', { 'id': detalleSolicitud.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('detallesolicitud_new') }}">Create a new detalleSolicitud</a>
+        </li>
+    </ul>
+{% endblock %}

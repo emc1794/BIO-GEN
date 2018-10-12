@@ -1,12 +1,8 @@
-reparacion:
-    resource: "@ReparacionBundle/Controller/"
+idioma:
+    resource: "@IdiomaBundle/Controller/"
     type:     annotation
-    prefix:   /reparacion/
+    prefix:   /
 
-solicitud:
-    resource: "@SolicitudBundle/Controller/"
-    type:     annotation
-    prefix:   /solicitud/
 
 app:
     resource: '@AppBundle/Controller/'

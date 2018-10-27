@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block page_content %}
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><b>Listado de jugadores </b><small><a href="{{ path('jugador_new') }}"><i class="fa fa-plus" aria-hidden="true"></i> Registrar nuevo jugador</a></small></h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-xs-12">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Nombre</th>
+                                    <th>Paterno</th>
+                                    <th>Materno</th>
+                                    <th>CI</th>
+                                    <th>Fecha de Nacimiento</th>
+                                    <th>Genero</th>
+                                    <th>Opciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for jugador in jugadors %}
+                                    <tr>
+                                        <td><a href="{{ path('jugador_show', { 'id': jugador.id }) }}">{{ jugador.id }}</a></td>
+                                        <td>{{ jugador.nombre }}</td>
+                                        <td>{{ jugador.paterno }}</td>
+                                        <td>{{ jugador.materno }}</td>
+                                        <td>{{ jugador.ci }}</td>
+                                        <td>{{ jugador.fechaNacimiento |date('d-m-Y')}}</td>
+                                        <td>{{ jugador.sexoString }}</td>
+                                        <td>
+                                            <a href="{{ path('jugador_show', { 'id': jugador.id }) }}" class="btn btn-info btn-xs">Mostrar</a>
+                                            <a href="{{ path('jugador_edit', { 'id': jugador.id }) }}" class="btn btn-warning btn-xs">Editar</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

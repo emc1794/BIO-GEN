@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block page_content %}
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><b>Registro de categoria </b><small>Formulario</small></h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+                {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <input type="submit" value="Registar" class="btn btn-success"/>
+                <a href="{{ path('categoria_index') }}" class="btn btn-default">Volver al listado</a>
+                {{ form_end(form) }}
+                        
+            </div>
+        </div>
+    </div>
+{% endblock %}

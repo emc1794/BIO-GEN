@@ -1,0 +1,41 @@
+<?php
+
+namespace TotaisBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Representante
+ *
+ * @ORM\Table(name="representante")
+ * @ORM\Entity(repositoryClass="TotaisBundle\Repository\RepresentanteRepository")
+ */
+class Representante extends Persona
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * One Solicitud has Many SolicitudDetalles.
+     * @ORM\OneToMany(targetEntity="Equipo", mappedBy="representante",cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $equipo;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return Parent::getId();
+    }
+}
+

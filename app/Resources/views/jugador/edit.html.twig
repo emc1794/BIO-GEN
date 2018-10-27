@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block page_content %}
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><b>Edicion de jugador </b><small>Formulario</small></h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+
+                {{ form_start(edit_form) }}
+                {{form_row(edit_form.nombre)}}
+                {{form_row(edit_form.paterno)}}
+                {{form_row(edit_form.materno)}}
+                {{form_row(edit_form.ci)}}
+                {{form_row(edit_form.fechaNacimiento)}}
+                {% for child  in edit_form.sexo %}
+                    <p>
+                        {{form_row(child,{'attr':{'class':'flat'}})}}
+                    </p>
+                {% endfor %}
+                {{form_row(edit_form.telefono)}}
+                {{form_row(edit_form.email)}}
+                {{form_row(edit_form.direccion)}}
+                <input id="form_submit" type="submit" value="Guardar cambios"  class="btn btn-primary" />
+                <a href="{{ path('jugador_index') }}" class="btn btn-default">Volver al listado</a>
+                {{ form_end(edit_form) }}
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

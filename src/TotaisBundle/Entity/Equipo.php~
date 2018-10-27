@@ -1,0 +1,152 @@
+<?php
+
+namespace TotaisBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Equipo
+ *
+ * @ORM\Table(name="equipo")
+ * @ORM\Entity(repositoryClass="TotaisBundle\Repository\EquipoRepository")
+ */
+class Equipo
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=255, unique=true)
+     */
+    private $nombre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="escudo", type="string", length=255, nullable=true)
+     */
+    private $escudo;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fechaFundacion", type="datetime")
+     */
+    private $fechaFundacion;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Categoria", inversedBy="equipo")
+     * @ORM\JoinColumn(name="categoria_id", referencedColumnName="id")
+     */
+    private $categoria;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Representante", inversedBy="equipo")
+     * @ORM\JoinColumn(name="representante_id", referencedColumnName="id")
+     */
+    private $representante;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="Empleado", inversedBy="equipo")
+     * @ORM\JoinColumn(name="empleado_id", referencedColumnName="id")
+     */
+    private $empleado;
+    
+    /**
+     * One Solicitud has Many SolicitudDetalles.
+     * @ORM\OneToMany(targetEntity="JugadorEquipo", mappedBy="equipo",cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $jugadorEquipo;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return Equipo
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set escudo
+     *
+     * @param string $escudo
+     *
+     * @return Equipo
+     */
+    public function setEscudo($escudo)
+    {
+        $this->escudo = $escudo;
+
+        return $this;
+    }
+
+    /**
+     * Get escudo
+     *
+     * @return string
+     */
+    public function getEscudo()
+    {
+        return $this->escudo;
+    }
+
+    /**
+     * Set fechaFundacion
+     *
+     * @param \DateTime $fechaFundacion
+     *
+     * @return Equipo
+     */
+    public function setFechaFundacion($fechaFundacion)
+    {
+        $this->fechaFundacion = $fechaFundacion;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaFundacion
+     *
+     * @return \DateTime
+     */
+    public function getFechaFundacion()
+    {
+        return $this->fechaFundacion;
+    }
+}
+

@@ -1,0 +1,41 @@
+<?php
+
+namespace TotaisBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Jugador
+ *
+ * @ORM\Table(name="jugador")
+ * @ORM\Entity(repositoryClass="TotaisBundle\Repository\JugadorRepository")
+ */
+class Jugador extends Persona
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * One Solicitud has Many SolicitudDetalles.
+     * @ORM\OneToMany(targetEntity="JugadorEquipo", mappedBy="jugador",cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $jugadorEquipo;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return Parent::getId();
+    }
+}
+

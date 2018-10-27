@@ -1,9 +1,9 @@
 <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
         <div class="navbar nav_title" style="border: 0;">
-              <a href="#" class="site_title">
-                <img src="{{ asset('lab-1.jpg') }}" alt="..." class="logo">
-                 <span class="titlepage">BIO-GEN</span></a>
+            <a href="#" class="site_title">
+                <i class="fa fa-futbol-o" aria-hidden="true"></i>
+                <span class="titlepage">TOTAISES</span></a>
         </div>
 
         <div class="clearfix"></div>
@@ -17,9 +17,9 @@
 
                 <span><b>Bienvenido</b></span> <br>
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <span>{{app.user.persona.nombreCompleto}}</span>
+                    <span>{{app.user.persona.nombreCompleto}}</span>
                 {% endif %}
-                 <br>
+                <br>
                 <b style="color:white"></b>
 
             </div>
@@ -33,13 +33,13 @@
             <div class="menu_section">
                 <h3>Menu</h3>
                 <ul class="nav side-menu">
-                    <li><a><i class="fa fa-file-text" aria-hidden="true"></i>
-                                    Solicitud <span class="fa fa-chevron-down"></span></a>
-                                <ul class="nav child_menu">
-                                    <li><a href="{{path('solicitud_index')}}">Mis solicitudes</a></li>
-                                    <li><a  href="{{path('solicitud_reporte')}}">Reportes</a></li>
-                            </ul>
-                        </li>
+                    <li><a href="{{path('categoria_index')}}"><i class="fa fa-sitemap" aria-hidden="true"></i>Categoria</a>
+                    </li>
+                    <li><a href="{{path('jugador_index')}}"><i class="fa fa-user" aria-hidden="true"></i>Jugador</a>
+                    </li>
+                    <li><a href="{{path('equipo_index')}}"><i class="fa fa-users" aria-hidden="true"></i>Equipo</a>
+                    </li>
+                    
                 </ul>
             </div>
 

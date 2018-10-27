@@ -1,0 +1,48 @@
+<?php
+
+namespace TotaisBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TipoEmpleado
+ *
+ * @ORM\Table(name="tipo_empleado")
+ * @ORM\Entity(repositoryClass="TotaisBundle\Repository\TipoEmpleadoRepository")
+ */
+class TipoEmpleado
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cargo", type="string", length=100)
+     */
+    private $tipoEmpleado;
+    
+    /**
+     * One Solicitud has Many SolicitudDetalles.
+     * @ORM\OneToMany(targetEntity="Empleado", mappedBy="tipoEmpleado",cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $empleado;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+}
+

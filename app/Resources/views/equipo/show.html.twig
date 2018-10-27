@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block page_content %}
+    <h1>Equipo</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ equipo.id }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ equipo.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Escudo</th>
+                <td>{{ equipo.escudo }}</td>
+            </tr>
+            <tr>
+                <th>Fechafundacion</th>
+                <td>{% if equipo.fechaFundacion %}{{ equipo.fechaFundacion|date('Y-m-d H:i:s') }}{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('equipo_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('equipo_edit', { 'id': equipo.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}

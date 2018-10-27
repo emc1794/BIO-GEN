@@ -1,0 +1,47 @@
+<?php
+
+namespace TotaisBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Empleado
+ *
+ * @ORM\Table(name="empleado")
+ * @ORM\Entity(repositoryClass="TotaisBundle\Repository\EmpleadoRepository")
+ */
+class Empleado extends Persona
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    
+    /**
+     * @ORM\ManyToOne(targetEntity="TipoEmpleado", inversedBy="empleado")
+     * @ORM\JoinColumn(name="tipo_empleado_id", referencedColumnName="id")
+     */
+    private $tipoEmpleado;
+    
+    /**
+     * One Solicitud has Many SolicitudDetalles.
+     * @ORM\OneToMany(targetEntity="Equipo", mappedBy="empleado",cascade={"persist", "remove"}, orphanRemoval=true)
+     */
+    private $equipo;
+
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return Parent::getId();
+    }
+}
+

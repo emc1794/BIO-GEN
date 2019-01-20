@@ -1,40 +1,44 @@
 {% extends 'base.html.twig' %}
 
 {% block page_content %}
-    <h1>Equipo</h1>
-
-    <table>
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ equipo.id }}</td>
-            </tr>
-            <tr>
-                <th>Nombre</th>
-                <td>{{ equipo.nombre }}</td>
-            </tr>
-            <tr>
-                <th>Escudo</th>
-                <td>{{ equipo.escudo }}</td>
-            </tr>
-            <tr>
-                <th>Fechafundacion</th>
-                <td>{% if equipo.fechaFundacion %}{{ equipo.fechaFundacion|date('Y-m-d H:i:s') }}{% endif %}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('equipo_index') }}">Back to the list</a>
-        </li>
-        <li>
-            <a href="{{ path('equipo_edit', { 'id': equipo.id }) }}">Edit</a>
-        </li>
-        <li>
-            {{ form_start(delete_form) }}
-                <input type="submit" value="Delete">
-            {{ form_end(delete_form) }}
-        </li>
-    </ul>
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2><b>Datos del Equipo </b><small>Ver</small></h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-xs-12">
+                        <table class="table table-striped table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Nº</th>
+                                    <td><b>{{equipo.id}}</b></td>
+                                    <th>Equipo</th>
+                                    <td>{{equipo.nombre}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Categoria</th>
+                                    <td><b>{{equipo.categoria.nombre}}</b></td>
+                                    <th>Representante</th>
+                                    <td>{{equipo.representante.nombreCompleto}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Fecha Fundacion</th>
+                                    <td><b>{{equipo.fechaFundacion|date('d-m-Y')}}</b></td>
+                                    <th>Opciones</th>
+                                    <td><a href="{{path('equipo_edit',{id:equipo.id})}}" class="btn btn-warning btn-xs"> Editar</i></a>
+                                        {{ form_start(delete_form) }}
+                                        <input type="submit" value="Eliminar" class="btn btn-danger btn-xs">
+                                        {{ form_end(delete_form) }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

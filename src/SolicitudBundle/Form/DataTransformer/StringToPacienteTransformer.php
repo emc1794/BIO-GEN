@@ -58,8 +58,7 @@ class StringToPacienteTransformer implements DataTransformerInterface
 
         $paciente = $this->em
             ->getRepository('SolicitudBundle:Paciente')
-            // query for the issue with this id
-            ->findOneById()($string[0])
+            ->findOneById($string[0])
         ;
 
 
